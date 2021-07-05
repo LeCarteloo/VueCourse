@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+
+        <h2>Variable</h2>
+        <hr>
+        <!-- VUE uses double mustache 2x brackets,
+        greeting variable is defined in scriptVue.js and
+        initialized with value of 'Hello Vue' -->
+        <h1>
+            {{ greeting }}
+        </h1>
+
+        <h2>V-model</h2>
+        <hr>
+        <!-- V-model is a directive, that in this situation
+        is shown in input (this input contains the value of
+        greeting variable). If we change the input box
+        to the other value the H1 above is changing dynamically -->
+        <input v-model="greeting">
+
+
+        <h2>V-if statement</h2>
+        <hr>
+        <!-- Vue has if directive where you can check the condition
+        of an variable. Count variable is initialized in scriptVue.JS
+        and it is set to 1 so it should write GREEN on the page 
+        If this whole statement below is false then none of divs 
+        would be rendered in DOM-->
+        <div v-if = "count === 1">
+            Green
+        </div>
+        <div v-else-if = "count === 2">
+            Red
+        </div>
+        <div v-else>
+            Orange
+        </div>
+
+        <h2>V-show directive</h2>
+        <hr>
+        <!-- Directive v-show also can be used as an if
+        but this time this div below is being rendered in the DOM
+        even when the condition is incorrect, but with display 
+        set to none in CSS -->
+        <div v-show="count === 1">
+            Green
+        </div>
+
+        <h2>V-bind directive</h2>
+        <hr>
+        <!-- It allows to set a html atribute e.g disabled, style etc. and give it
+        some kind of condition  https://vuejs.org/v2/api/#v-bind  (shorcut :disabled)-->
+        <div class="div" id="root">
+            Sign Up
+            <br>
+            <!-- {red: email.length < 2 && email.length != 0} if you want to toggle one class
+            only this is one syntax it is called object syntax or you can use array syntax
+            - it allows to change between two classes. -->
+                <input v-model="email" :class="[email.length < 2 ? 'red' : 'green']">
+            </br>
+            <button onclick="alert('signed up')" v-bind:disabled="email.length < 2">
+                Submit
+            </button>
+        </div>
+
+        <h2>V-text and V-html directives</h2>
+        <hr>
+        <!-- Via v-text you can do exactly the same if you will use double brackets '{{}}'' -->
+        <h3>V-text</h3>
+        <p v-text="paragraph"></p>
+        <input type="text" v-model= "paragraph">
+
+        <!-- V-html provides possibility to write html in input and it will render that. -->
+        <h3>V-html</h3>
+        <p v-html="paragraph"></p>
+        <input type="text" v-model= "paragraph">
+
+        <h2>V-once directive</h2>
+        <hr>
+        <!-- If you will use v-once it means that it is gonna be rendered only once, even if you
+        will change the value again it doesn't render again.  -->
+        <p v-once>{{ once }}</p>
+        <p>{{ once }}</p>
+        <input type="text" v-model="once">
+
+    </div>
+    <script src="scriptVue.js"></script>
+</body>
+</html>
