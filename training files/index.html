@@ -85,9 +85,38 @@
         <hr>
         <!-- If you will use v-once it means that it is gonna be rendered only once, even if you
         will change the value again it doesn't render again.  -->
-        <p v-once>{{ once }}</p>
-        <p>{{ once }}</p>
+        <p v-once>{{ once }} <- renders only once</p>
+        <p>{{ once }} <- renders multiple times</p>
         <input type="text" v-model="once">
+
+        <h2>V-for, V-on:click and V-on:keyup directives with filters</h2>
+        <hr>
+
+        <!-- V-on:keyup is an event handler (in this case enter button)
+        V-on:click is and event handler of an mouse click. Any event has a shortcut
+        with @ for e.g @keyup or @click -->
+        <input v-model="newTech" v-on:keyup.enter="addTech">
+        <button @click="addTech" v-bind:disabled="newTech.length <= 0">
+            + ADD TECH
+        </button>
+        
+        <!-- It is made in computed and then rendered to DOM -->
+        {{ dashTech }}
+
+        <ul>
+            <!-- It allows to render multiple elements from array it also works with object inside
+            arrays. | capitalize it is filter that changes the display of an
+            item only in view but not in data property 
+            Using filters:
+            <li v-for="tech in techs"> {{ tech | capitalize | addDash }} </li>
+            above using computed (dashTech) -->
+            <li v-for="tech in techs"> {{ tech }} </li>
+        </ul>
+
+        <h2>Componets</h2>
+        <hr>
+
+        <tech-list :techs="techs"/>
 
     </div>
     <script src="scriptVue.js"></script>
