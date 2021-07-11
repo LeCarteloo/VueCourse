@@ -1,13 +1,17 @@
 <template>
   <div id="app">
-    <Header/>
+    <Header
+    :numTotal = "numTotal"
+    :numCorrect = "numCorrect"/>
     <b-container class="bv-example-row">
       <b-row>
-        <b-col sm="6" offset="3">
+        <b-col fluid="sm">
           <QuestionBox
           v-if="questions.length != 0"
           :currentQuestion = "questions[index]"
           :nextQuestion = "nextQuestion"
+          :increment = "increment"
+          :indexOfQuestion = "index"
           />
         </b-col>
       </b-row>
@@ -28,12 +32,20 @@ export default {
   data() {
     return {
       questions: [],
-      index: 0
+      index: 0,
+      numCorrect: 0,
+      numTotal: 0
     }
   },
   methods: {
     nextQuestion() {
       this.index++
+    },
+    increment(isCorrect) {
+      if (isCorrect) {
+        this.numCorrect++
+      }
+      this.numTotal++
     }
   },
   mounted: function() {
@@ -57,6 +69,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

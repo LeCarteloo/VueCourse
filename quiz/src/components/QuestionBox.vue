@@ -10,17 +10,27 @@
             <p>
                 <b-list-group>
                     <b-list-group-item  
-                    v-for="(answer, index) in answers" 
+                    v-for="(answer, index) in shuffledAnswers" 
                     :key="index"
                     @click="selectAnswer(index)"
-                    :class="[selectedIndex === index ? 'selected' : '']">
+                    :class="answerClass(index)">
                         {{ answer }}
                     </b-list-group-item>
                 </b-list-group>
             </p>
 
-            <b-button variant="primary" href="#">Sumbit</b-button>
-            <b-button variant="success" @click="nextQuestion" href="#">Next</b-button>
+            <b-button 
+                variant = "primary"
+                @click = "submitAnswer"
+                :disabled = "selectedIndex === null || answered">
+            Sumbit
+            </b-button>
+                <b-button 
+                variant = "success" 
+                :class = "{none: indexOfQuestion === 9 }"
+                @click = "nextQuestion">
+            Next    
+            </b-button>
         </b-jumbotron>
     </div>
 </template>
@@ -33,18 +43,23 @@ export default {
     // QuestionBox template.
     props: {
         currentQuestion: Object,
-        nextQuestion: Function
+        nextQuestion: Function,
+        increment: Function,
+        indexOfQuestion: Number,
 
     },
     data() {
         return {
             selectedIndex: null,
-            shuffledAnswers: []
+            correctIndex: null,
+            shuffledAnswers: [],
+            answered: false,
         }
     },
     computed: {
         answers() {
-            // Copy of an array ... <-
+            // Copy of an array ... <- And also this function is not in used
+            // Instead in use is the function shuffleAnswers()
             let answers = [...this.currentQuestion.incorrect_answers]
             answers.push(this.currentQuestion.correct_answer)
             return answers
@@ -55,6 +70,7 @@ export default {
             immediate: true,
             handler() {
                 this.selectedIndex = null
+                this.answered = false
                 this.shuffleAnswers()
             }
         }
@@ -70,10 +86,33 @@ export default {
         shuffleAnswers() {
             let answers = [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer]
             this.shuffledAnswers = _.shuffle(answers)
+            this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer)
+
+            // console.log(this.currentQuestion.correct_answer + " " + this.correctIndex) <-- Answers
+        },
+        submitAnswer() {
+            this.answered = true
+            let isCorrect = false
+
+            if(this.selectedIndex === this.correctIndex) {
+                isCorrect = true
+            }
+            
+            this.increment(isCorrect)
+        },
+        answerClass(index) {
+            let answerClass = ''
+
+            if(!this.answered && this.selectedIndex === index) {
+                answerClass = 'selected'
+            } else if(this.answered && this.correctIndex === index) {
+                answerClass = 'correct'
+            } else if(this.answered && this.selectedIndex === index && this.correctIndex !== index) {
+                answerClass = 'incorrect'
+            }
+
+            return answerClass
         }
-    },
-    mounted() {
-        console.log(this.currentQuestion)
     },
 }
 </script>
@@ -86,7 +125,6 @@ export default {
         margin-right: 10px;
     }
     .list-group-item:hover {
-        opacity: 0.5;
         cursor: pointer;
     }
     .selected {
@@ -97,5 +135,8 @@ export default {
     }
     .incorrect {
         background-color: red;
+    }
+    .none {
+        display: none;
     }
 </style>
