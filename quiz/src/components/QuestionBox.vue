@@ -46,7 +46,6 @@ export default {
         nextQuestion: Function,
         increment: Function,
         indexOfQuestion: Number,
-
     },
     data() {
         return {
